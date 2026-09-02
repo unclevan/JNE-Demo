@@ -20,6 +20,7 @@
 - Excel 中的联系人、手机号等敏感信息未展示；缺失字段统一显示“暂未提供”。
 - 数据驾驶舱改为独立内部页面，仅通过 `?page=cockpit` 访问，不在原平台首页或导航中展示入口。
 - 驾驶舱采用独立深色可视化风格，覆盖交易总览、资产供给、区域热力、交易趋势、转化链路、市场主体、AI 洞察及运行提醒。
+- 驾驶舱子页已补齐资产供给、市场主体、交易效能、风险感知和 AI 洞察；页面内指标、图表、风险事件与 AI 建议均为本地模拟数据，可切换演示。
 
 ## 技术结构
 
@@ -28,6 +29,7 @@
 - 页面逻辑：`src/main.js`
 - 演示数据：`src/data.js`
 - 样式：`src/style.css`
+- 驾驶舱子页样式：`src/cockpit.css`
 - GitHub Pages 工作流：`.github/workflows/deploy-pages.yml`
 - GitHub Pages 静态资源路径配置：`vite.config.js`
 - Sites 托管配置：`.openai/hosting.json`
