@@ -56,11 +56,12 @@
 
 .dash-kpi { height: 94px; padding: 11px 16px; }
 .dash-kpi strong { font-size: 25px; }
-.dash-metric { min-height: 0; height: 94px; padding: 13px 15px; clip-path: polygon(0 0, 96% 0, 100% 14%, 100% 100%, 0 100%); }
-.dash-metric small { display: block; color: #83b1ca; font-size: 11px; }
+.dash-metric { display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-rows: auto auto; align-content: center; column-gap: 16px; min-height: 0; height: 94px; padding: 13px 15px; clip-path: polygon(0 0, 96% 0, 100% 14%, 100% 100%, 0 100%); }
+.dash-metric small { color: #83b1ca; font-size: 11px; }
+.dash-metric > small { grid-column: 1; grid-row: 1; align-self: end; }
 .dash-metric > small, .dash-panel-title b { display: inline-flex; align-items: center; gap: 6px; width: max-content; max-width: 100%; }
-.dash-metric b { display: inline-block; margin-top: 8px; font-size: clamp(20px, 1.45vw, 28px); line-height: 1; }
-.dash-metric em { font-size: 10px; }
+.dash-metric > b { grid-column: 2; grid-row: 1 / 3; align-self: center; justify-self: end; min-width: max-content; margin: 0; text-align: right; white-space: nowrap; font-size: clamp(20px, 1.45vw, 28px); font-variant-numeric: tabular-nums; line-height: 1; }
+.dash-metric > em { grid-column: 1; grid-row: 2; align-self: start; margin: 7px 0 0; font-size: 10px; }
 
 .dash-layout, .dash-work-grid {
   flex: 1 1 auto;
@@ -152,4 +153,5 @@
   .dash-subnav { min-width: 1120px; }
   .dash-header, .dash-workspace, .dash-footer { min-width: 1120px; }
   .dash-work-kpis { min-width: 1120px; }
+  .dash-metric > b { font-size: 22px; }
 }
