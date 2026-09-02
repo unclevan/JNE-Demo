@@ -45,6 +45,60 @@ function cockpitLegacyDashboard(){
 }
 
 const dashTabs=[['overview','交易总览'],['supply','资产供给'],['subjects','市场主体'],['efficiency','交易效能'],['risk','风险感知'],['insights','AI洞察']];
+const dashboardHelp={
+  '累计挂牌标的':'截至统计时点纳入平台的有效挂牌标的总数；同一标的重新挂牌时按新项目口径计数。',
+  '本月成交额':'本月已完成成交确认项目的成交价格合计，不含保证金及其他服务费用。',
+  '平均溢价率':'（成交价合计－对应起始价合计）÷ 对应起始价合计 × 100%。',
+  '活跃市场主体':'本月发生登录、报名、资格审查或竞价行为的去重市场主体数量。',
+  '在库资产总量':'当前资产库中可识别、可管理的资产记录总数，包含挂牌和待盘活资产。',
+  '本月新增挂牌':'本月首次发布挂牌公告的标的数量，撤回后重新发布不重复计算。',
+  '待盘活资产':'已入库但尚未形成有效挂牌或连续较长时间未交易的资产数量。',
+  '资产信息完整度':'已填写且通过格式校验的核心字段数 ÷ 应填写核心字段总数。',
+  '高价值资产':'依据评估价、面积、区位和历史成交热度综合评分达到阈值的资产数。',
+  '累计市场主体':'平台完成注册并形成有效主体档案的企业、个体工商户和自然人去重数量。',
+  '本月活跃主体':'本月至少发生一次报名、竞买、收藏或咨询行为的去重主体数。',
+  '新增注册主体':'本月完成平台注册和基础身份核验的新增主体数量。',
+  '竞买转化率':'参与竞买的主体数 ÷ 已通过报名审核的主体数 × 100%。',
+  '优质企业库':'主体画像、经营状态与交易信用评分达到演示阈值的企业数量。',
+  '平均成交周期':'从首次公告发布至成交确认的平均自然日数。',
+  '线上办理率':'可在线完成的有效业务件数 ÷ 全部有效业务件数 × 100%。',
+  '资格审查准时率':'在规定时限内完成资格审查的项目数 ÷ 应审查项目数 × 100%。',
+  '项目成交率':'统计期内成交项目数 ÷ 结束挂牌项目数 × 100%。',
+  '平均竞价轮次':'发生有效竞价的项目总出价轮次 ÷ 竞价项目数量。',
+  '当前风险预警':'当前仍处于待核验、处理中或待复核状态的风险提示总数。',
+  '待人工核验':'AI或规则引擎无法自动确认、需要业务人员核对的事项数量。',
+  '异常行为线索':'根据出价频率、关联关系和操作轨迹识别出的待核验线索数。',
+  '合规校验覆盖率':'已执行自动规则校验的项目数 ÷ 应校验项目数 × 100%。',
+  '已闭环处置':'统计期内已完成核验、处置并记录结论的风险事项数量。',
+  'AI解析项目':'已由AI完成公告、附件和结构化字段解析的项目数量。',
+  '智能推荐触达':'推荐结果已展示给潜在竞买人的去重触达次数。',
+  '潜在供需匹配':'资产条件与主体意向综合匹配分达到演示阈值的候选关系数。',
+  '风险辅助识别':'AI从公告、规则与行为数据中识别出的风险提示数量。',
+  '知识库覆盖':'已纳入检索范围的公告、交易规则、政策和案例条目总数。',
+  '资产供给结构':'按有效挂牌标的数量计算各资产品类占比。',
+  '交易转化链路':'展示挂牌、报名、竞买和成交各环节数量及相邻环节转化率。',
+  '市场主体活跃度':'综合本月报名、竞买、收藏和咨询行为衡量主体参与活跃程度。',
+  '区域交易热力分布':'综合区域挂牌量、成交额、报名人数和竞价轮次形成热度指数。',
+  '交易规模运行趋势':'按月汇总成交确认金额，用于观察交易规模变化。',
+  '区域交易热度排行':'区域热度指数＝挂牌量30%＋成交额35%＋报名人数20%＋竞价活跃度15%。',
+  'AI 智能洞察':'基于挂牌、交易、主体和规则演示数据生成的辅助研判摘要。',
+  '运行提醒':'汇总当天待审查、即将竞价和字段待补充事项。',
+  '资产供给趋势':'按月统计新增有效挂牌标的数量并进行趋势对比。',
+  '资产来源结构':'按委托主体性质统计农村集体、国有及其他资产占比。',
+  '资产类型与区域分布':'交叉展示资产品类、挂牌数量、成交金额和区域供给规模。',
+  '主体活跃趋势':'按月对比新增注册、有效报名和参与竞买主体数量。',
+  '主体画像分布':'依据主体类型、行业标签和交易行为对主体进行分类统计。',
+  '重点客群与意向匹配':'根据资产用途、区域、价格与主体偏好计算候选匹配度。',
+  '交易流程效率':'展示各交易节点平均耗时，并与内部演示目标时效比较。',
+  '项目成交率走势':'每月成交项目数 ÷ 当月结束挂牌项目数 × 100%。',
+  '服务效能对比':'综合平均成交周期与资格审查准时率进行区域对比。',
+  '风险矩阵':'按发生概率和影响程度对待核验风险进行分级分布。',
+  '风险事件流':'按发现时间展示规则校验和AI识别的最新风险提示。',
+  '合规健康度':'由规则通过率、风险等级和闭环及时率加权形成的演示评分。',
+  '今日 AI 研判摘要':'AI汇总供需、交易热度与风险变化生成的当日辅助摘要。',
+  '智能撮合机会':'匹配度＝用途适配35%＋区域偏好25%＋价格匹配25%＋主体能力15%。',
+  '知识问答热词':'统计近30日咨询问题中的高频关键词和用户意图。'
+};
 const dashPanel=(title,subtitle,content,extra='')=>`<article class="dash-panel dash-work-panel ${extra}"><div class="dash-panel-title"><div><b>${title}</b><small>${subtitle}</small></div><span>◌</span></div>${content}</article>`;
 const dashMetric=(label,value,delta='')=>`<div class="dash-metric"><small>${label}</small><b>${value}</b>${delta?`<em>${delta}</em>`:''}</div>`;
 const dashBars=(values,cls='dash-column-bars')=>`<div class="${cls}">${values.map((v,i)=>`<i style="height:${v}%" data-value="${v}"><span>${['01','02','03','04','05','06','07','08','09','10','11','12'][i]}</span></i>`).join('')}</div>`;
@@ -81,10 +135,34 @@ function dashContent(d){
     <div class="dash-work-kpis">${dashMetric('AI解析项目','10,864','结构化字段 72,468')}${dashMetric('智能推荐触达','18,426','点击率 18.7%')}${dashMetric('潜在供需匹配','3,862','高置信度 1,148')}${dashMetric('风险辅助识别','138','人工确认率 91.3%')}${dashMetric('知识库覆盖','286,000+','公告 · 规则 · 案例')}</div>
     <div class="dash-work-grid insight-grid">${dashPanel('今日 AI 研判摘要','基于挂牌、交易与周边资源演示数据','<div class="ai-summary"><div class="ai-orb"><i></i><b>AI</b></div><div><p><b>市场供给稳中有升，商业用房活跃度提升明显</b></p><small>本周海宁市商业用房报名热度环比 +16%，建议优先关注 7 个高匹配项目。</small><div><button data-dash-action="toast">生成专项简报</button><button data-dash-action="toast">查看研判依据</button></div></div></div>','ai-summary-panel')}${dashPanel('智能撮合机会','高置信度供需匹配 TOP 5','<div class="opportunity-list">'+[['海昌街道工业仓储项目','物流仓储企业','94%','产业适配 · 价格匹配'],['海洲街道沿街商铺','餐饮零售经营者','92%','客群匹配 · 区位便利'],['斜桥镇农用地','农业经营主体','89%','规模匹配 · 用途适配'],['硖石街道停车资源','物业服务企业','87%','运营能力 · 区域需求'],['海盐家宴中心','文旅餐饮机构','85%','场景契合 · 经营能力']].map(x=>`<div><i>✦</i><p><b>${x[0]}</b><small>匹配对象：${x[1]} · ${x[3]}</small></p><em>${x[2]}</em></div>`).join('')+'</div>','opportunity-panel')}${dashPanel('知识问答热词','近30日咨询主题与意图分布','<div class="word-cloud"><span>报名流程</span><span>竞买保证金</span><span>资产位置</span><span>租赁期限</span><span>竞价规则</span><span>商铺</span><span>工业用房</span><span>资格条件</span><span>海宁市</span><span>成交参考</span></div><div class="ai-path"><b>AI处理链路</b><span>公告解析</span><i>›</i><span>知识检索</span><i>›</i><span>规则校验</span><i>›</i><span>辅助回答</span></div>','word-panel')}</div>
   </section>`;
-  return `<section class="dash-workspace dash-overview"><div class="dash-kpis">${d.kpis.map((x,i)=>`<article class="dash-kpi"><div class="kpi-top"><span>${x[0]}</span><i>${['◈','¥','↗','◌'][i]}</i></div><strong>${x[1]}</strong><p><b>${x[2]}</b> ${x[3]}</p><div class="kpi-spark spark-${i}"><i></i><i></i><i></i><i></i><i></i><i></i></div></article>`).join('')}</div><div class="dash-layout">${cockpitLegacyDashboard().match(/<section class="dash-layout">([\s\S]*)<\/section>\s*<footer/)[1]}</div></section>`;
+  return `<section class="dash-workspace dash-overview"><div class="dash-work-kpis overview-kpis">${d.kpis.map(x=>dashMetric(x[0],x[1],`${x[2]} ${x[3]}`)).join('')}</div><div class="dash-layout">${cockpitLegacyDashboard().match(/<section class="dash-layout">([\s\S]*)<\/section>\s*<footer/)[1]}</div></section>`;
 }
 
-function attachDashControls(){document.querySelectorAll('[data-dash-tab]').forEach(el=>el.onclick=()=>{dashTab=el.dataset.dashTab;render()});document.querySelectorAll('[data-dash-action]').forEach(el=>el.onclick=()=>{if(el.dataset.dashAction==='fullscreen'){document.documentElement.requestFullscreen?.()}else{toast(el.dataset.dashAction==='refresh'?'驾驶舱数据已刷新（演示数据）':'Demo暂未开放，已记录您的操作')}})}
+function showDashHelp(icon){
+  document.querySelector('.dash-help-tip')?.remove();
+  const tip=document.createElement('div');
+  tip.className='dash-help-tip';
+  tip.textContent=icon.dataset.help;
+  document.body.append(tip);
+  const rect=icon.getBoundingClientRect(), width=Math.min(280,window.innerWidth-28);
+  tip.style.width=`${width}px`;
+  tip.style.left=`${Math.max(14,Math.min(rect.left+rect.width/2-width/2,window.innerWidth-width-14))}px`;
+  tip.style.top=`${Math.max(12,rect.bottom+9)}px`;
+  requestAnimationFrame(()=>tip.classList.add('show'));
+}
+function attachDashHelp(){
+  document.querySelectorAll('.dash-metric>small,.dash-panel-title b').forEach(label=>{
+    if(label.querySelector('.dash-help')) return;
+    const name=label.textContent.trim(), icon=document.createElement('span');
+    icon.className='dash-help'; icon.textContent='?'; icon.tabIndex=0;
+    icon.dataset.help=dashboardHelp[name]||`${name}基于当前驾驶舱本地模拟数据计算，正式口径以业务数据字典为准。`;
+    icon.title=icon.dataset.help; icon.setAttribute('aria-label',`${name}口径说明`);
+    icon.onmouseenter=()=>showDashHelp(icon); icon.onfocus=()=>showDashHelp(icon);
+    icon.onmouseleave=()=>document.querySelector('.dash-help-tip')?.remove(); icon.onblur=()=>document.querySelector('.dash-help-tip')?.remove();
+    label.append(icon);
+  });
+}
+function attachDashControls(){document.querySelectorAll('[data-dash-tab]').forEach(el=>el.onclick=()=>{dashTab=el.dataset.dashTab;render()});document.querySelectorAll('[data-dash-action]').forEach(el=>el.onclick=()=>{if(el.dataset.dashAction==='fullscreen'){document.documentElement.requestFullscreen?.()}else{toast(el.dataset.dashAction==='refresh'?'驾驶舱数据已刷新（演示数据）':'Demo暂未开放，已记录您的操作')}});attachDashHelp()}
 function render(){app.innerHTML=page==='home'?home():page==='cockpit'?cockpit():detail();bind();attachDashControls();}
 function bind(){document.querySelectorAll('[data-action]').forEach(el=>el.onclick=()=>{let a=el.dataset.action;if(a==='home'){page='home';history.pushState({},'',location.pathname);render()}if(a==='cockpit'){page='cockpit';history.pushState({},'',location.pathname+'?page=cockpit');render()}if(a==='asset'){page='detail';history.pushState({},'',location.pathname+'?page=detail');render()}if(a==='chat'){chatOpen=!chatOpen;render()}if(a==='consult'){analysisOpen=false;chatOpen=true;render()}if(a==='analysis'){analysisOpen=!analysisOpen;render()}if(a==='toast'){toast('Demo暂未开放，正式入口以平台业务系统为准')}if(a==='ask'){ask(el.dataset.q)}if(a==='send'){let input=document.querySelector('#chat-input');if(input?.value.trim())ask(input.value.trim())}if(a==='report'){toast('AI解析报告已生成，可在浏览器打印或保存为 PDF');window.print()}});document.querySelectorAll('[data-tab]').forEach(el=>el.onclick=()=>{activeTab=el.dataset.tab;render()});document.querySelectorAll('[data-layer]').forEach(el=>el.onclick=()=>{activeLayer=el.dataset.layer;render()})}
 function ask(q){const extra=document.querySelector('#chat-extra');if(!extra)return;extra.innerHTML=`<div class="msg user">${esc(q)}</div><div class="typing">AI正在分析条件 <i></i><i></i><i></i></div>`;setTimeout(()=>{extra.innerHTML+=`<div class="msg ai">${page==='home'?'已为您提取：<b>海宁市</b> · <b>商业 / 工业用房</b> · 年租金 <b>20万元以内</b>。为您找到 3 个匹配标的：':''}${page==='home'?listings.map(listingCard).join(''):answer(q)}</div>`;document.querySelector('.messages').scrollTop=99999;bind()},650)}

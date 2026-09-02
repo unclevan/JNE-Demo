@@ -52,11 +52,13 @@
   margin: 0 0 11px;
   gap: 11px;
 }
+.overview-kpis { grid-template-columns: repeat(4, 1fr); }
 
 .dash-kpi { height: 94px; padding: 11px 16px; }
 .dash-kpi strong { font-size: 25px; }
 .dash-metric { min-height: 0; height: 94px; padding: 13px 15px; clip-path: polygon(0 0, 96% 0, 100% 14%, 100% 100%, 0 100%); }
 .dash-metric small { display: block; color: #83b1ca; font-size: 11px; }
+.dash-metric > small, .dash-panel-title b { display: inline-flex; align-items: center; gap: 6px; width: max-content; max-width: 100%; }
 .dash-metric b { display: inline-block; margin-top: 8px; font-size: clamp(20px, 1.45vw, 28px); line-height: 1; }
 .dash-metric em { font-size: 10px; }
 
@@ -76,6 +78,10 @@
 .dash-panel-title small { font-size: 10px; }
 .dash-panel { background: linear-gradient(145deg, rgba(11, 43, 73, .96), rgba(5, 24, 47, .94)); box-shadow: inset 0 0 35px rgba(18, 176, 218, .08), 0 6px 20px rgba(0, 6, 18, .22); }
 .dash-panel::after { filter: drop-shadow(0 0 5px #35d9f1); }
+.dash-help { flex: 0 0 auto; display: inline-grid; place-items: center; width: 15px; height: 15px; border: 1px solid rgba(91, 221, 241, .65); border-radius: 50%; color: #72e8f3; background: rgba(15, 69, 94, .88); font-size: 10px; font-style: normal; font-weight: 600; line-height: 1; cursor: help; transition: color .18s, border-color .18s, box-shadow .18s; }
+.dash-help:hover, .dash-help:focus { outline: none; color: #fff; border-color: #80f5ff; box-shadow: 0 0 9px rgba(83, 225, 243, .6); }
+.dash-help-tip { position: fixed; z-index: 9999; padding: 10px 12px; border: 1px solid rgba(61, 202, 226, .7); border-radius: 4px; color: #cceff5; background: rgba(5, 29, 49, .97); box-shadow: 0 10px 28px rgba(0, 4, 14, .46), inset 0 0 18px rgba(37, 190, 218, .08); font-size: 11px; line-height: 1.65; letter-spacing: .1px; opacity: 0; transform: translateY(-4px); pointer-events: none; transition: opacity .15s, transform .15s; }
+.dash-help-tip.show { opacity: 1; transform: translateY(0); }
 .dash-footer { height: 28px; margin: 0; padding-top: 7px; align-items: center; }
 
 /* 资产供给 */
