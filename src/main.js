@@ -1,5 +1,6 @@
 import './style.css';
 import './cockpit.css';
+import './cockpit-layout.css';
 import { asset, listings, quickHome, quickDetail, cockpitData } from './data.js';
 
 const app = document.querySelector('#app');
