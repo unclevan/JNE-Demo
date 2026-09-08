@@ -211,18 +211,21 @@ async function initBaiduHeatmap(){
     ];
     const applyDarkStyle=()=>map.setMapStyle({styleJson:darkMapStyle});
     applyDarkStyle();setTimeout(applyDarkStyle,300);
-    const regions=[['海宁市',120.680,30.510,86],['南湖区',120.783,30.747,78],['嘉善县',120.926,30.831,72],['桐乡市',120.565,30.630,69],['秀洲区',120.710,30.765,64],['海盐县',120.946,30.526,51],['平湖市',121.016,30.700,43]];
-    const offsets=[[0,0],[.012,.006],[-.011,.008],[.008,-.010],[-.009,-.008],[.019,-.003],[-.018,.002],[.004,.016],[-.004,-.017],[.024,.012],[-.023,-.011],[.015,-.019],[-.015,.019]];
-    const points=regions.flatMap(([,lng,lat,count])=>offsets.map(([x,y],i)=>({lng:lng+x,lat:lat+y,count:Math.max(12,count-i*5)})));
-    const heatmap=new window.BMapLib.HeatmapOverlay({radius:68,visible:true,opacity:82,gradient:{0:'#183f9e',.32:'#147fc1',.55:'#19c4df',.76:'#38ead4',1:'#ffe66a'}});
+    const regions=[
+      ['海宁市',120.680,30.510,100,.98,3246],['南湖区',120.783,30.747,72,.72,2510],['嘉善县',120.926,30.831,49,.50,1980],
+      ['桐乡市',120.565,30.630,31,.39,1710],['秀洲区',120.710,30.765,19,.31,1430],['海盐县',120.946,30.526,10,.23,1120],['平湖市',121.016,30.700,4,.15,850]
+    ];
+    const cluster=[[0,0,1],[.024,.010,.42],[-.022,.013,.38],[.016,-.023,.34],[-.018,-.020,.30],[.038,-.006,.24],[-.036,.004,.20]];
+    const points=regions.flatMap(([,lng,lat,index])=>cluster.map(([x,y,factor])=>({lng:lng+x,lat:lat+y,count:Math.max(1,Math.round(index*factor))})));
+    const heatmap=new window.BMapLib.HeatmapOverlay({radius:72,visible:true,opacity:92,gradient:{0:'#203a9a',.22:'#147ed1',.42:'#18d1e5',.62:'#32e596',.80:'#f4dc45',1:'#ff4d3d'}});
     map.addOverlay(heatmap);
     heatmap.setDataSet({data:points,max:100});
     const tip=shell.querySelector('[data-map-tooltip]');
     map.addEventListener('mousemove',event=>{
       const nearest=regions.map(region=>({region,distance:map.getDistance(event.point,new BMap.Point(region[1],region[2]))})).sort((a,b)=>a.distance-b.distance)[0];
       if(!nearest||nearest.distance>18000){tip.classList.remove('show');return;}
-      const [name,,,index]=nearest.region;
-      tip.innerHTML=`<b>${name}</b><span>综合热度指数 ${index}</span><small>本地模拟数据</small>`;
+      const [name,,,index,amount,assets]=nearest.region;
+      tip.innerHTML=`<b>${name}</b><span>综合热度指数 ${index}</span><span>成交额 ${amount.toFixed(2)} 亿元</span><span>挂牌标的 ${fmt(assets)} 宗</span><small>本地模拟数据</small>`;
       tip.style.left=`${event.pixel.x+14}px`;tip.style.top=`${event.pixel.y+14}px`;tip.classList.add('show');
     });
     map.addEventListener('mouseout',()=>tip.classList.remove('show'));
