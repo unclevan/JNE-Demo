@@ -8,7 +8,7 @@
 
 ## 技术结构
 
-- Vite + 原生 JavaScript + CSS。
+- Vite + 原生 JavaScript + CSS，数值型图表使用 ECharts 按需注册。
 - `src/main.js`：页面模板、路由状态和交互逻辑。
 - `src/data.js`：标的和驾驶舱本地演示数据。
 - `src/style.css`：门户、详情、AI助手和基础驾驶舱样式。
@@ -25,6 +25,7 @@
 - 不接线上业务接口，不提交真实交易数据。
 - 不展示真实个人敏感信息。
 - 新增驾驶舱指标时同步补充问号口径说明。
+- 新增数值型可视化时沿用 `src/main.js` 中的 ECharts 初始化机制，并为每个系列补充可读的 tooltip 和单位。
 - 新增推测性结论时同步补充“模拟分析”或“仅供参考”。
 - 驾驶舱继续保持隐藏入口，只允许 URL 直达。
 - 门户 AI 和详情页 AI 使用同一助手形象，但回复上下文不同。
@@ -40,11 +41,10 @@
 
 ## 源码和发布
 
-- GitHub 仓库：`unclevan/JNE-Demo`。
+- GitHub 仓库：`https://github.com/unclevan/JNE-Demo.git`（`unclevan/JNE-Demo`）。
 - 目标分支：`main`。
 - 客户访问优先使用 GitHub Pages：`https://unclevan.github.io/JNE-Demo/`。
 - GitHub Pages 驾驶舱直达：`https://unclevan.github.io/JNE-Demo/?page=cockpit`。
 - 工作区未必保留 `.git` 元数据。开始提交前先检查，不要对源文件执行破坏性重置；必要时使用安全的临时 Git 元数据连接现有远端。
 - `.openai/hosting.json` 已绑定现有 Sites 项目，禁止重复创建项目或持久化临时凭证。
 - 只有文档变化且不影响网页时，无需重新部署网页；页面源码或构建产物变化时再执行构建、推送和发布。
-

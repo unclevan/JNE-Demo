@@ -45,9 +45,10 @@ AI 能力应形成一条连贯链路：
 
 ## 当前访问方式
 
+- 源码仓库：`https://github.com/unclevan/JNE-Demo.git`
+
 - 门户首页：`https://unclevan.github.io/JNE-Demo/`
 - 标的详情页：`/?page=detail`
 - 内部驾驶舱：`/?page=cockpit`
 
 驾驶舱是内部页面，不应在公开门户首页、主导航或详情页中增加可见入口。
-

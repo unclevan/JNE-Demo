@@ -85,6 +85,41 @@
 .dash-help-tip.show { opacity: 1; transform: translateY(0); }
 .dash-footer { height: 28px; margin: 0; padding-top: 7px; align-items: center; }
 
+/* ECharts：所有数据图形统一支持悬浮读取模拟数值 */
+.echart { flex: 1 1 auto; width: 100%; min-width: 0; min-height: 0; }
+.overview-small-chart { min-height: 120px; }
+.overview-mini-chart { min-height: 72px; }
+.overview-region-chart { min-height: 250px; background: linear-gradient(rgba(72,157,190,.07) 1px,transparent 1px),linear-gradient(90deg,rgba(72,157,190,.07) 1px,transparent 1px); background-size: 24px 24px; }
+.overview-trend-chart { min-height: 150px; }
+.work-chart { min-height: 180px; margin: 4px 8px 8px; }
+.supply-region-chart { min-height: 220px; margin: 13px 13px 13px 0; border: 1px solid rgba(41,125,159,.5); background: linear-gradient(rgba(72,157,190,.08) 1px,transparent 1px),linear-gradient(90deg,rgba(72,157,190,.08) 1px,transparent 1px); background-size: 24px 24px; }
+.efficiency-chart { min-height: 290px; margin: 4px 8px 0; }
+.premium-echart { flex: 1 1 220px; min-height: 190px; }
+.type-impact-chart { min-height: 300px; margin: 8px; }
+.question-chart { min-height: 280px; margin: 8px 10px 0; }
+
+/* 1920 × 1080 信息密度优化 */
+.supply-panel,.funnel-dark,.subject-panel,.main-map,.trend-dark,.ranking-panel { display: flex; flex-direction: column; }
+.supply-panel .overview-small-chart,.funnel-dark .overview-small-chart,.ranking-panel .overview-small-chart { min-height: 0; }
+.main-map .overview-region-chart,.trend-dark .overview-trend-chart { min-height: 0; }
+.ranking-panel .overview-small-chart { margin: 3px 8px 8px 0; }
+
+.supply-table { gap: 7px; padding: 14px 16px; }
+.supply-row { min-height: 0; padding: 0 16px; font-size: 13px; }
+.supply-row:not(.header) { margin: 0; border: 1px solid rgba(44,111,143,.38); border-left: 3px solid #24cfe8; background: linear-gradient(90deg,rgba(20,78,108,.54),rgba(8,39,64,.18)); }
+.supply-row:not(.header) span:first-child { color: #e1f8fb; font-size: 15px; font-weight: 600; }
+.supply-row:not(.header) span:not(:first-child),.supply-row:not(.header) b { font-size: 13px; font-variant-numeric: tabular-nums; }
+.supply-row.header { padding-inline: 16px; font-size: 11px; }
+
+.risk-timeline { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 14px; padding: 24px; }
+.risk-timeline>div { display: grid; grid-template-columns: 58px 14px 1fr auto; gap: 12px; min-height: 0; padding: 22px 18px; border: 1px solid rgba(39,112,145,.52); border-left: 3px solid #35cfe2; background: linear-gradient(135deg,rgba(15,65,94,.72),rgba(7,31,55,.42)); }
+.risk-timeline time { font-size: 13px; }
+.risk-timeline i { width: 11px; height: 11px; }
+.risk-timeline b { margin-bottom: 8px; font-size: 15px; }
+.risk-timeline small { display: block; max-width: 250px; font-size: 12px; line-height: 1.7; }
+.risk-timeline em { padding: 5px 9px; font-size: 11px; }
+.matrix-panel .echart,.health-panel .echart { min-height: 260px; margin: 4px 8px; }
+
 /* 资产供给 */
 .supply-grid { grid-template-columns: .92fr 2.08fr; }
 .dash-stack { display: grid; grid-template-rows: 1fr 1fr; gap: 11px; min-height: 0; }
@@ -201,4 +236,39 @@
   .dash-header, .dash-workspace, .dash-footer { min-width: 1120px; }
   .dash-work-kpis { min-width: 1120px; }
   .dash-metric > b { font-size: 22px; }
+}
+
+/* 二次密度优化：主体画像、风险感知与溢价核心成效 */
+.efficiency-impact-grid { grid-template-columns: 1.15fr 1.05fr 1fr; }
+.premium-echart { min-height: 220px; }
+.risk-grid { grid-template-columns: .8fr 1.26fr .94fr; }
+.risk-chart { min-height: 0; margin: 6px 8px 10px; }
+.risk-timeline { flex: 1; display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 14px; padding: 20px; }
+.risk-timeline>div { flex: unset; grid-template-columns: 54px 14px minmax(0,1fr) auto; gap: 12px; min-height: 0; padding: 22px 18px; border: 1px solid rgba(39,112,145,.56); border-left: 3px solid #35cfe2; background: linear-gradient(135deg,rgba(15,65,94,.78),rgba(7,31,55,.46)); }
+.risk-timeline time { color: #92c2d4; font-size: 14px; font-weight: 600; }
+.risk-timeline i { width: 11px; height: 11px; }
+.risk-timeline b { margin-bottom: 8px; font-size: 16px; }
+.risk-timeline small { display: block; max-width: none; color: #91bccb; font-size: 13px; line-height: 1.65; }
+.risk-timeline p strong { display: block; margin-top: 9px; color: #5fe0e9; font-size: 12px; font-weight: 500; }
+.risk-timeline em { padding: 5px 9px; font-size: 11px; white-space: nowrap; }
+.health-note { padding: 18px 10px; gap: 22px; font-size: 12px; }
+
+.risk-detail-modal { position: fixed; inset: 0; z-index: 10000; display: grid; place-items: center; padding: 30px; background: rgba(1,9,22,.76); backdrop-filter: blur(5px); }
+.risk-modal-card { width: min(760px,92vw); max-height: min(760px,86vh); overflow: hidden; border: 1px solid rgba(63,220,239,.7); background: linear-gradient(145deg,#0c3453,#071b34); color: #dff8ff; box-shadow: 0 24px 70px rgba(0,0,0,.55),inset 0 0 35px rgba(32,194,221,.08); }
+.risk-modal-card>header { display: flex; align-items: center; justify-content: space-between; padding: 18px 22px; border-bottom: 1px solid rgba(55,157,187,.45); background: rgba(15,72,101,.58); }
+.risk-modal-card>header b { display: block; font-size: 19px; }.risk-modal-card>header small { display: block; margin-top: 5px; color: #83b6ca; font-size: 12px; }
+.risk-modal-card>header button { width: 34px; height: 34px; border: 1px solid #3489a7; background: #0c405e; color: #bff7ff; font-size: 22px; cursor: pointer; }
+.risk-modal-list { max-height: calc(86vh - 142px); overflow-y: auto; padding: 12px 20px; }
+.risk-modal-list article { display: grid; grid-template-columns: 38px 1fr auto; gap: 14px; align-items: center; padding: 13px 10px; border-bottom: 1px solid rgba(48,126,153,.35); }
+.risk-modal-list article>i { display: grid; place-items: center; width: 30px; height: 30px; border: 1px solid #358eaa; color: #75e9f4; background: #0d4562; font-size: 11px; font-style: normal; }
+.risk-modal-list article b { font-size: 14px; }.risk-modal-list article p { margin: 5px 0 0; color: #8eb9c9; font-size: 12px; }
+.risk-modal-list article>span { padding: 4px 8px; border: 1px solid #a47231; color: #ffd37c; background: rgba(122,78,26,.3); font-size: 11px; }
+.risk-modal-card>footer { padding: 12px 22px; border-top: 1px solid rgba(55,157,187,.35); color: #6e9fb4; font-size: 11px; }
+
+@media (max-height: 820px) {
+  .risk-timeline { gap: 9px; padding: 12px; }
+  .risk-timeline>div { padding: 12px; }
+  .risk-timeline b { font-size: 14px; }
+  .risk-timeline small { font-size: 11px; }
+  .premium-echart { min-height: 170px; }
 }
