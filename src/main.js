@@ -41,9 +41,9 @@ function cockpitLegacyDashboard(){
       <aside class="dash-left"><article class="dash-panel supply-panel"><div class="dash-panel-title"><div><b>资产供给结构</b><small>按挂牌标的数量</small></div><span>◌</span></div>${chart('overviewSupply','overview-small-chart')}</article>
       <article class="dash-panel funnel-dark"><div class="dash-panel-title"><div><b>交易转化链路</b><small>挂牌至成交转化情况</small></div><span>›</span></div>${chart('overviewFunnel','overview-small-chart')}</article>
       <article class="dash-panel subject-panel"><div class="dash-panel-title"><div><b>市场主体活跃度</b><small>本月参与交易主体</small></div><span>↗</span></div><div class="subject-numbers"><div><b>8,240</b><small>新增报名</small></div><div><b>3,186</b><small>新增竞买</small></div></div>${chart('overviewSubjects','overview-mini-chart')}</article></aside>
-      <section class="dash-center"><article class="dash-panel main-map"><div class="dash-panel-title"><div><b>区域交易热力分布</b><small>挂牌与成交综合指数</small></div><div class="map-switch"><span class="on">成交额</span><span>标的数</span><span>活跃度</span></div></div>${chart('overviewRegion','overview-region-chart')}<div class="map-foot"><span><i></i>低活跃</span><span><i></i>中活跃</span><span><i></i>高活跃</span><b>区域总成交额：3.28亿元</b></div></article>
+      <section class="dash-center"><article class="dash-panel main-map"><div class="dash-panel-title"><div><b>区域交易热力分布</b><small>百度地图 · 挂牌与成交综合指数</small></div><div class="map-switch"><span class="on">成交额</span><span>标的数</span><span>活跃度</span></div></div><div class="map-stage-shell">${chart('overviewRegion','overview-region-chart map-fallback-chart')}<div class="baidu-heatmap" data-baidu-map></div><div class="map-service-status">正在加载百度地图…</div><div class="map-hover-tooltip" data-map-tooltip></div></div><div class="map-foot"><span><i></i>低活跃</span><span><i></i>中活跃</span><span><i></i>高活跃</span><b>区域总成交额：3.28亿元 · 演示热力数据</b></div></article>
       <article class="dash-panel trend-dark"><div class="dash-panel-title"><div><b>交易规模运行趋势</b><small>近12个月成交金额（亿元）</small></div><div class="trend-tags"><span>成交额</span><span>挂牌量</span></div></div>${chart('overviewTrend','overview-trend-chart')}</article></section>
-      <aside class="dash-right"><article class="dash-panel ranking-panel"><div class="dash-panel-title"><div><b>区域交易热度排行</b><small>综合指数 TOP 5</small></div><span>⋯</span></div>${chart('overviewRanking','overview-small-chart')}</article>
+      <aside class="dash-right"><article class="dash-panel ranking-panel"><div class="dash-panel-title"><div><b>区域交易热度排行</b><small>全市综合指数</small></div><span>⋯</span></div>${chart('overviewRanking','overview-small-chart')}</article>
       <article class="dash-panel insight-dark"><div class="dash-panel-title"><div><b>AI 智能洞察</b><small>实时监测与辅助研判</small></div><span class="ai-live">● 实时</span></div>${d.alerts.map((x,i)=>`<div class="insight-row"><i class="insight-${i}">${['↑','!','✦'][i]}</i><p><small>${x[0]}</small><b>${x[1]}</b></p><span>›</span></div>`).join('')}<button class="dash-ai-button">✦ 进入AI交易研判</button></article>
       <article class="dash-panel notice-dark"><div class="dash-panel-title"><div><b>运行提醒</b><small>今日待办事项</small></div><span>◷</span></div><div><p><i></i>待资格审查项目 <b>18</b> 个</p><p><i></i>即将开始竞价 <b>6</b> 个</p><p><i></i>待补充公告字段 <b>12</b> 项</p></div></article></aside>
     </section>
@@ -161,6 +161,78 @@ const legend={textStyle:{color:'#a9cee1',fontSize:10},itemWidth:10,itemHeight:6}
 const baseGrid={left:42,right:18,top:34,bottom:26,containLabel:false};
 const fmt=v=>Number(v).toLocaleString('zh-CN');
 let chartInstances=[];
+const BAIDU_MAP_AK='CDusmU84klBq6mMiBwcs03tpjZ7rgZWC';
+let baiduMapPromise;
+
+function loadExternalScript(src,id){
+  if(document.getElementById(id))return Promise.resolve();
+  return new Promise((resolve,reject)=>{
+    const script=document.createElement('script');
+    script.id=id;script.src=src;script.async=true;script.onload=resolve;script.onerror=reject;
+    document.head.append(script);
+  });
+}
+
+function loadBaiduMap(){
+  if(window.BMap&&window.BMapLib?.HeatmapOverlay)return Promise.resolve();
+  if(baiduMapPromise)return baiduMapPromise;
+  baiduMapPromise=new Promise((resolve,reject)=>{
+    const finish=()=>loadExternalScript('https://jsapi-demo.bj.bcebos.com/BMap-JavaScript-library/Heatmap/Heatmap.min.js','jne-bmap-heatmap').then(resolve,reject);
+    if(window.BMap){finish();return;}
+    const timeout=setTimeout(()=>reject(new Error('百度地图加载超时')),10000);
+    window.__jneBaiduMapReady=()=>{clearTimeout(timeout);delete window.__jneBaiduMapReady;finish()};
+    const script=document.createElement('script');
+    script.id='jne-bmap-api';script.async=true;
+    script.src=`https://api.map.baidu.com/api?v=4.0&ak=${BAIDU_MAP_AK}&callback=__jneBaiduMapReady`;
+    script.onerror=()=>{clearTimeout(timeout);reject(new Error('百度地图加载失败'))};
+    document.head.append(script);
+  });
+  return baiduMapPromise;
+}
+
+async function initBaiduHeatmap(){
+  const el=document.querySelector('[data-baidu-map]');
+  if(!el)return;
+  const shell=el.closest('.map-stage-shell');
+  try{
+    await loadBaiduMap();
+    if(!document.body.contains(el))return;
+    const BMap=window.BMap;
+    const map=new BMap.Map(el,{enableIconClick:false,minZoom:9,maxZoom:14});
+    map.centerAndZoom(new BMap.Point(120.76,30.69),10);
+    map.enableScrollWheelZoom(true);
+    const darkMapStyle=[
+      {featureType:'land',elementType:'geometry',stylers:{color:'#071b31ff'}},{featureType:'water',elementType:'geometry',stylers:{color:'#061426ff'}},
+      {featureType:'green',elementType:'geometry',stylers:{color:'#082237ff'}},{featureType:'building',elementType:'geometry',stylers:{color:'#09233aff'}},
+      {featureType:'highway',elementType:'all',stylers:{visibility:'off'}},{featureType:'arterial',elementType:'all',stylers:{visibility:'off'}},
+      {featureType:'local',elementType:'all',stylers:{visibility:'off'}},{featureType:'railway',elementType:'all',stylers:{visibility:'off'}},
+      {featureType:'boundary',elementType:'geometry',stylers:{color:'#215a73ff'}},{featureType:'label',elementType:'all',stylers:{visibility:'off'}},
+      {featureType:'poi',elementType:'all',stylers:{visibility:'off'}},{featureType:'districtlabel',elementType:'all',stylers:{visibility:'off'}}
+    ];
+    const applyDarkStyle=()=>map.setMapStyle({styleJson:darkMapStyle});
+    applyDarkStyle();setTimeout(applyDarkStyle,300);
+    const regions=[['海宁市',120.680,30.510,86],['南湖区',120.783,30.747,78],['嘉善县',120.926,30.831,72],['桐乡市',120.565,30.630,69],['秀洲区',120.710,30.765,64],['海盐县',120.946,30.526,51],['平湖市',121.016,30.700,43]];
+    const offsets=[[0,0],[.012,.006],[-.011,.008],[.008,-.010],[-.009,-.008],[.019,-.003],[-.018,.002],[.004,.016],[-.004,-.017],[.024,.012],[-.023,-.011],[.015,-.019],[-.015,.019]];
+    const points=regions.flatMap(([,lng,lat,count])=>offsets.map(([x,y],i)=>({lng:lng+x,lat:lat+y,count:Math.max(12,count-i*5)})));
+    const heatmap=new window.BMapLib.HeatmapOverlay({radius:68,visible:true,opacity:82,gradient:{0:'#183f9e',.32:'#147fc1',.55:'#19c4df',.76:'#38ead4',1:'#ffe66a'}});
+    map.addOverlay(heatmap);
+    heatmap.setDataSet({data:points,max:100});
+    const tip=shell.querySelector('[data-map-tooltip]');
+    map.addEventListener('mousemove',event=>{
+      const nearest=regions.map(region=>({region,distance:map.getDistance(event.point,new BMap.Point(region[1],region[2]))})).sort((a,b)=>a.distance-b.distance)[0];
+      if(!nearest||nearest.distance>18000){tip.classList.remove('show');return;}
+      const [name,,,index]=nearest.region;
+      tip.innerHTML=`<b>${name}</b><span>综合热度指数 ${index}</span><small>本地模拟数据</small>`;
+      tip.style.left=`${event.pixel.x+14}px`;tip.style.top=`${event.pixel.y+14}px`;tip.classList.add('show');
+    });
+    map.addEventListener('mouseout',()=>tip.classList.remove('show'));
+    shell.classList.add('map-ready');
+  }catch(error){
+    shell.classList.add('map-failed');
+    const status=shell.querySelector('.map-service-status');
+    if(status)status.textContent='地图服务暂不可用，已切换为本地演示图';
+  }
+}
 
 function chartOption(type){
   const d=cockpitData;
@@ -249,7 +321,7 @@ function attachDashHelp(){
   });
 }
 function attachDashControls(){document.querySelectorAll('[data-dash-tab]').forEach(el=>el.onclick=()=>{dashTab=el.dataset.dashTab;render()});document.querySelectorAll('[data-dash-action]').forEach(el=>el.onclick=()=>{if(el.dataset.dashAction==='fullscreen'){document.documentElement.requestFullscreen?.()}else{toast(el.dataset.dashAction==='refresh'?'驾驶舱数据已刷新（演示数据）':'Demo暂未开放，已记录您的操作')}});attachDashHelp()}
-function render(){chartInstances.forEach(instance=>instance.dispose());chartInstances=[];app.innerHTML=page==='home'?home():page==='cockpit'?cockpit():detail();bind();attachDashControls();initCharts();}
+function render(){chartInstances.forEach(instance=>instance.dispose());chartInstances=[];app.innerHTML=page==='home'?home():page==='cockpit'?cockpit():detail();bind();attachDashControls();initCharts();initBaiduHeatmap();}
 function bind(){document.querySelectorAll('[data-action]').forEach(el=>el.onclick=()=>{let a=el.dataset.action;if(a==='home'){page='home';history.pushState({},'',location.pathname);render()}if(a==='cockpit'){page='cockpit';history.pushState({},'',location.pathname+'?page=cockpit');render()}if(a==='asset'){page='detail';history.pushState({},'',location.pathname+'?page=detail');render()}if(a==='chat'){chatOpen=!chatOpen;render()}if(a==='consult'){analysisOpen=false;chatOpen=true;render()}if(a==='analysis'){analysisOpen=!analysisOpen;render()}if(a==='toast'){toast('Demo暂未开放，正式入口以平台业务系统为准')}if(a==='ask'){ask(el.dataset.q)}if(a==='send'){let input=document.querySelector('#chat-input');if(input?.value.trim())ask(input.value.trim())}if(a==='report'){toast('AI解析报告已生成，可在浏览器打印或保存为 PDF');window.print()}});document.querySelectorAll('[data-tab]').forEach(el=>el.onclick=()=>{activeTab=el.dataset.tab;render()});document.querySelectorAll('[data-layer]').forEach(el=>el.onclick=()=>{activeLayer=el.dataset.layer;render()})}
 function ask(q){const extra=document.querySelector('#chat-extra');if(!extra)return;extra.innerHTML=`<div class="msg user">${esc(q)}</div><div class="typing">AI正在分析条件 <i></i><i></i><i></i></div>`;setTimeout(()=>{extra.innerHTML+=`<div class="msg ai">${page==='home'?'已为您提取：<b>海宁市</b> · <b>商业 / 工业用房</b> · 年租金 <b>20万元以内</b>。为您找到 3 个匹配标的：':''}${page==='home'?listings.map(listingCard).join(''):answer(q)}</div>`;document.querySelector('.messages').scrollTop=99999;bind()},650)}
 function answer(q){let t=q.includes('适合')?'基于面积、用途和区位条件，AI参考建议仓储周转、供应链配套及轻型经营业态。建议进一步核实消防、用电和经营范围。':q.includes('人口')?'周边资源为演示数据：1公里圈层常住人口约2.6万，周边企业约186家，产业以制造业配套和仓储物流为主。':'当前字段显示起始价为70,080元/年，三年基础租金约21.02万元。保证金、递增方式等尚未提供，请以公告和合同为准。';return `${t}<div class="source">依据：挂牌信息 · 周边资源演示数据 · 参考建议</div>`}
