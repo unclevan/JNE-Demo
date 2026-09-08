@@ -44,7 +44,7 @@ function cockpitLegacyDashboard(){
   </main>`;
 }
 
-const dashTabs=[['overview','交易总览'],['supply','资产供给'],['subjects','市场主体'],['efficiency','交易效能'],['risk','风险感知'],['insights','AI洞察']];
+const dashTabs=[['overview','交易总览'],['efficiency','交易效能'],['supply','资产供给'],['subjects','市场主体'],['risk','风险感知'],['insights','AI洞察']];
 const dashboardHelp={
   '累计挂牌标的':'截至统计时点纳入平台的有效挂牌标的总数；同一标的重新挂牌时按新项目口径计数。',
   '本月成交额':'本月已完成成交确认项目的成交价格合计，不含保证金及其他服务费用。',
@@ -65,6 +65,11 @@ const dashboardHelp={
   '资格审查准时率':'在规定时限内完成资格审查的项目数 ÷ 应审查项目数 × 100%。',
   '项目成交率':'统计期内成交项目数 ÷ 结束挂牌项目数 × 100%。',
   '平均竞价轮次':'发生有效竞价的项目总出价轮次 ÷ 竞价项目数量。',
+  '综合溢价率':'（成交价合计－对应起始价合计）÷ 对应起始价合计 × 100%；当前为AI辅助期模拟口径。',
+  '溢价率环比':'本月综合溢价率－上月综合溢价率，以百分点（pp）表示。',
+  'AI有效触达':'AI推荐被目标主体查看、点击或产生咨询行为的去重触达次数。',
+  '平均竞买人数':'产生有效报价的竞买人数合计 ÷ 发生竞价的项目数量。',
+  '撮合报名转化率':'AI有效触达后形成有效报名的主体数 ÷ AI有效触达主体数 × 100%。',
   '当前风险预警':'当前仍处于待核验、处理中或待复核状态的风险提示总数。',
   '待人工核验':'AI或规则引擎无法自动确认、需要业务人员核对的事项数量。',
   '异常行为线索':'根据出价频率、关联关系和操作轨迹识别出的待核验线索数。',
@@ -92,6 +97,9 @@ const dashboardHelp={
   '交易流程效率':'展示各交易节点平均耗时，并与内部演示目标时效比较。',
   '项目成交率走势':'每月成交项目数 ÷ 当月结束挂牌项目数 × 100%。',
   '服务效能对比':'综合平均成交周期与资格审查准时率进行区域对比。',
+  'AI触达与竞价趋势':'按月展示AI有效触达量、平均竞买人数和综合溢价率的联动变化。',
+  '溢价率核心成效':'以AI辅助期综合溢价率为中心，对比同比、环比及辅助前基准。',
+  '分类型增效分析':'按标的类型比较AI辅助前后竞买人数和溢价率变化。',
   '风险矩阵':'按发生概率和影响程度对待核验风险进行分级分布。',
   '风险事件流':'按发现时间展示规则校验和AI识别的最新风险提示。',
   '合规健康度':'由规则通过率、风险等级和闭环及时率加权形成的演示评分。',
@@ -123,10 +131,16 @@ function dashContent(d){
     <div class="dash-work-kpis">${dashMetric('累计市场主体','274,306','较上月 +6.8%')}${dashMetric('本月活跃主体','18,642','活跃率 6.8%')}${dashMetric('新增注册主体','2,486','较上月 +13.1%')}${dashMetric('竞买转化率','48.4%','报名至竞买')}${dashMetric('优质企业库','6,820','AI标签已覆盖')}</div>
     <div class="dash-work-grid subjects-grid">${dashPanel('主体活跃趋势','注册、报名、竞买三类行为',`<div class="subject-trend-legend"><span><i></i>新增注册</span><span><i></i>有效报名</span><span><i></i>参与竞买</span></div>${dashBars([31,43,38,57,48,61,69,73,65,79,82,91],'dash-column-bars multi-bars')}`)}${dashPanel('主体画像分布','按主体类型及行业标签','<div class="subject-profile"><div class="profile-rings"><i></i><i></i><b>27.4万<small>市场主体</small></b></div><div class="profile-list"><p>企业主体 <b>61%</b><span style="width:61%"></span></p><p>个体工商户 <b>24%</b><span style="width:24%"></span></p><p>自然人 <b>11%</b><span style="width:11%"></span></p><p>其他主体 <b>4%</b><span style="width:4%"></span></p></div></div>')}${dashPanel('重点客群与意向匹配','AI撮合候选池 · 本地模拟','<div class="match-list">'+[['物流仓储企业','适配工业用房','1,482','92%'],['餐饮零售经营者','适配商业用房','2,946','88%'],['农业经营主体','适配农村产权','4,218','86%'],['文化旅游机构','适配文旅资产','326','81%']].map(x=>`<div><i>◎</i><p><b>${x[0]}</b><small>${x[1]} · 候选 ${x[2]}</small></p><em>${x[3]}</em></div>`).join('')+'</div>','match-panel')}</div>
   </section>`;
-  if(dashTab==='efficiency') return `<section class="dash-workspace dash-efficiency">
-    <div class="dash-work-kpis">${dashMetric('平均成交周期','18.6天','同比 -2.4天')}${dashMetric('线上办理率','96.2%','较上月 +1.3%')}${dashMetric('资格审查准时率','98.7%','超时 6 件')}${dashMetric('项目成交率','35.1%','较上月 +2.8%')}${dashMetric('平均竞价轮次','12.4轮','较上月 +1.1轮')}</div>
-    <div class="dash-work-grid efficiency-grid">${dashPanel('交易流程效率','各节点平均耗时与目标时效','<div class="process-lane">'+[['挂牌准备','2.1天','≤3天','good'],['报名受理','5.3天','≤6天','good'],['资格审查','2.8天','≤3天','watch'],['自由竞价','1.0天','≤1天','good'],['成交确认','1.7天','≤2天','good']].map(x=>`<div><span class="lane-dot ${x[3]}"></span><p><b>${x[0]}</b><small>平均 ${x[1]} · 目标 ${x[2]}</small></p><i style="width:${Math.min(parseFloat(x[1])*28,92)}%"></i></div>`).join('')+'</div>','process-panel')}${dashPanel('项目成交率走势','按月成交项目 / 挂牌项目',dashBars([42,52,47,59,66,58,72,77,69,81,84,91],'dash-column-bars lime-bars'))}${dashPanel('服务效能对比','区域办理时效 TOP 5','<div class="efficiency-rank">'+[['海宁市','16.4天','98.9%'],['嘉善县','17.1天','98.1%'],['秀洲区','18.6天','97.6%'],['海盐县','19.2天','96.8%'],['平湖市','20.4天','95.9%']].map((x,i)=>`<p><i>${i+1}</i><b>${x[0]}</b><span>${x[1]}</span><em>${x[2]}</em></p>`).join('')+'</div>','efficiency-rank-panel')}</div>
-  </section>`;
+  if(dashTab==='efficiency'){
+    const impactMonths=[['09月',820,6.4,3.9],['10月',930,6.6,4.1],['11月',1100,6.9,4.3],['12月',1280,7.1,4.5],['01月',1460,7.4,4.8],['02月',1660,7.7,5.1],['03月',1890,7.8,5.3],['04月',2110,8.1,5.7],['05月',2370,8.3,6.0],['06月',2590,8.4,6.2],['07月',2860,8.6,6.5],['08月',3180,8.7,6.8]];
+    const typeImpact=[['农村产权','+72%',3.2,5.8,5.6,9.4],['商业用房','+88%',4.1,7.6,7.2,11.8],['工业用房','+81%',3.8,6.9,6.8,10.2],['国有产权','+59%',5.2,8.1,9.1,12.6],['社有资产','+67%',2.9,5.1,4.8,8.0]];
+    const premiumPoints=impactMonths.map((x,i)=>`${26+i*44},${128-(x[2]-6)*30}`).join(' ');
+    const bidderPoints=impactMonths.map((x,i)=>`${26+i*44},${130-(x[3]-3)*22}`).join(' ');
+    const timeAnalysis=`<div class="impact-legend"><span><i class="reach"></i>AI有效触达</span><span><i class="premium"></i>综合溢价率</span><span><i class="bidder"></i>平均竞买人数</span></div><div class="impact-chart"><div class="impact-grid"></div><div class="impact-bars">${impactMonths.map(x=>`<i style="height:${30+x[1]/3180*60}%" title="${x[0]} AI有效触达 ${x[1]} 次"></i>`).join('')}</div><svg viewBox="0 0 540 150" preserveAspectRatio="none" aria-label="AI触达、平均竞买人数及溢价率月度趋势"><polyline points="${premiumPoints}" fill="none" stroke="#43e7f3" stroke-width="2.4"/>${impactMonths.map((x,i)=>`<circle cx="${26+i*44}" cy="${128-(x[2]-6)*30}" r="3.2" fill="#08233d" stroke="#43e7f3" stroke-width="2"><title>${x[0]} 综合溢价率 ${x[2]}%</title></circle>`).join('')}<polyline points="${bidderPoints}" fill="none" stroke="#9b7dff" stroke-width="2.2" stroke-dasharray="5 4"/>${impactMonths.map((x,i)=>`<circle cx="${26+i*44}" cy="${130-(x[3]-3)*22}" r="2.8" fill="#08233d" stroke="#ad95ff" stroke-width="2"><title>${x[0]} 平均竞买人数 ${x[3]} 人</title></circle>`).join('')}</svg><div class="impact-x">${impactMonths.map(x=>`<span>${x[0]}</span>`).join('')}</div></div><div class="impact-latest"><div><small>近12月AI触达</small><b>21,250</b><em>人次</em></div><div><small>平均竞买人数</small><b>3.9 → 6.8</b><em>+74.4%</em></div><div><small>综合溢价率</small><b>6.4% → 8.7%</b><em>+2.3pp</em></div></div>`;
+    const premiumCore=`<div class="premium-core"><div class="premium-gauge"><div><small>当前综合溢价率</small><b>8.7<em>%</em></b><span>AI辅助期模拟值</span></div></div><div class="premium-compare"><div><small>同比</small><b>+2.1pp</b><span>去年同期 6.6%</span></div><div><small>环比</small><b>+0.8pp</b><span>上月 7.9%</span></div></div><div class="premium-before"><span>AI辅助前基准</span><b>4.9%</b><i>→</i><span>AI辅助期</span><b>8.7%</b><em>提升 +3.8pp</em></div><div class="premium-note">溢价率＝（成交价合计－对应起始价合计）÷ 对应起始价合计。该页面用于演示AI触达与交易成效的关联分析，不构成正式因果评估。</div></div>`;
+    const typeAnalysis=`<div class="type-impact"><div class="type-impact-head"><span>标的类型</span><span>触达增长</span><span>竞买人数</span><span>溢价率变化</span></div>${typeImpact.map(x=>`<div class="type-impact-row"><span>${x[0]}</span><em>${x[1]}</em><b>${x[2]} → ${x[3]}人</b><strong>${x[4]}% → ${x[5]}%<i>+${(x[5]-x[4]).toFixed(1)}pp</i></strong></div>`).join('')}<div class="type-impact-foot"><span>AI辅助前</span><span>AI辅助期</span><b>本地模拟对比</b></div></div>`;
+    return `<section class="dash-workspace dash-efficiency efficiency-impact"><div class="dash-work-kpis">${dashMetric('综合溢价率','8.7%','同比 +2.1pp')}${dashMetric('溢价率环比','+0.8pp','连续4个月上升')}${dashMetric('AI有效触达','18,426','同比 +68.3%')}${dashMetric('平均竞买人数','6.8人','AI辅助前 3.9人')}${dashMetric('撮合报名转化率','14.2%','较基准 +5.6pp')}</div><div class="dash-work-grid efficiency-impact-grid">${dashPanel('AI触达与竞价趋势','按月分析 · 触达、竞买人数与溢价率',timeAnalysis,'impact-trend-panel')}${dashPanel('溢价率核心成效','同比、环比及AI辅助前后模拟对比',premiumCore,'premium-center-panel')}${dashPanel('分类型增效分析','各类标的竞买人数与溢价率变化',typeAnalysis,'type-impact-panel')}</div></section>`;
+  }
   if(dashTab==='risk') return `<section class="dash-workspace dash-risk">
     <div class="dash-work-kpis risk-kpis">${dashMetric('当前风险预警','36','高风险 4 项')}${dashMetric('待人工核验','82','公告字段与附件')}${dashMetric('异常行为线索','12','竞价行为分析')}${dashMetric('合规校验覆盖率','94.6%','规则 162 条')}${dashMetric('已闭环处置','126','本月处置率 93.3%')}</div>
     <div class="dash-work-grid risk-grid">${dashPanel('风险矩阵','影响程度 × 发生概率','<div class="risk-matrix"><span>高</span><div class="rm-cell low"></div><div class="rm-cell mid"></div><div class="rm-cell high"><b>4</b></div><div class="rm-cell low"></div><div class="rm-cell mid"><b>12</b></div><div class="rm-cell high"><b>8</b></div><div class="rm-cell low"><b>6</b></div><div class="rm-cell low"><b>6</b></div><div class="rm-cell mid"></div><em>低　发生概率　高</em></div>','matrix-panel')}${dashPanel('风险事件流','按交易阶段和规则类型监测','<div class="risk-timeline">'+[['09:24','竞价行为','某工业用房项目出价频率异常','高'],['09:08','公告完整性','12个项目缺少保证金字段','中'],['08:52','资格条件','1个项目资格文本存在歧义','中'],['08:30','流程时效','3个项目审查节点即将超时','低']].map(x=>`<div><time>${x[0]}</time><i class="risk-${x[3]}"></i><p><b>${x[1]}</b><small>${x[2]}</small></p><em>${x[3]}风险</em></div>`).join('')+'</div>','risk-flow-panel')}${dashPanel('合规健康度','规则命中、人工核验与处置结果','<div class="health-gauge"><div><b>94.6</b><small>健康分</small></div></div><div class="health-note"><span>● 低风险 126</span><span>● 中风险 20</span><span>● 高风险 4</span></div>','health-panel')}</div>
