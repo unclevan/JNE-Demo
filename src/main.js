@@ -1,17 +1,19 @@
 import './style.css';
 import './cockpit.css';
 import './cockpit-layout.css';
+import './admin.css';
 import * as echarts from 'echarts/core';
 import { BarChart, EffectScatterChart, FunnelChart, GaugeChart, HeatmapChart, LineChart, PieChart, RadarChart, ScatterChart, TreemapChart } from 'echarts/charts';
 import { GridComponent, LegendComponent, TooltipComponent, VisualMapComponent } from 'echarts/components';
 import { CanvasRenderer } from 'echarts/renderers';
 import { asset, listings, quickHome, quickDetail, cockpitData } from './data.js';
+import { renderAdmin, bindAdmin, syncAdminRoute } from './admin.js';
 
 echarts.use([BarChart,EffectScatterChart,FunnelChart,GaugeChart,HeatmapChart,LineChart,PieChart,RadarChart,ScatterChart,TreemapChart,GridComponent,LegendComponent,TooltipComponent,VisualMapComponent,CanvasRenderer]);
 
 const app = document.querySelector('#app');
 const params = new URLSearchParams(location.search);
-let page = params.get('page') === 'detail' ? 'detail' : params.get('page') === 'cockpit' ? 'cockpit' : 'home';
+let page = params.get('page') === 'detail' ? 'detail' : params.get('page') === 'cockpit' ? 'cockpit' : params.get('page') === 'admin' ? 'admin' : 'home';
 let chatOpen = false, analysisOpen = false, activeTab = 'portrait', activeLayer = '人口热力', dashTab = 'overview';
 const esc = (s='') => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const chart = (type, className='') => `<div class="echart ${className}" data-chart="${type}" role="img" aria-label="${type}演示数据图表"></div>`;
@@ -324,9 +326,17 @@ function attachDashHelp(){
   });
 }
 function attachDashControls(){document.querySelectorAll('[data-dash-tab]').forEach(el=>el.onclick=()=>{dashTab=el.dataset.dashTab;render()});document.querySelectorAll('[data-dash-action]').forEach(el=>el.onclick=()=>{if(el.dataset.dashAction==='fullscreen'){document.documentElement.requestFullscreen?.()}else{toast(el.dataset.dashAction==='refresh'?'驾驶舱数据已刷新（演示数据）':'Demo暂未开放，已记录您的操作')}});attachDashHelp()}
-function render(){chartInstances.forEach(instance=>instance.dispose());chartInstances=[];app.innerHTML=page==='home'?home():page==='cockpit'?cockpit():detail();bind();attachDashControls();initCharts();initBaiduHeatmap();}
+function render(){
+  chartInstances.forEach(instance=>instance.dispose());chartInstances=[];
+  if(page==='admin'){
+    app.innerHTML=renderAdmin();
+    bindAdmin({rerender:render,navigate:target=>{page=target;history.pushState({},'',`${location.pathname}?page=${target}`);render()},toast});
+    return;
+  }
+  app.innerHTML=page==='home'?home():page==='cockpit'?cockpit():detail();bind();attachDashControls();initCharts();initBaiduHeatmap();
+}
 function bind(){document.querySelectorAll('[data-action]').forEach(el=>el.onclick=()=>{let a=el.dataset.action;if(a==='home'){page='home';history.pushState({},'',location.pathname);render()}if(a==='cockpit'){page='cockpit';history.pushState({},'',location.pathname+'?page=cockpit');render()}if(a==='asset'){page='detail';history.pushState({},'',location.pathname+'?page=detail');render()}if(a==='chat'){chatOpen=!chatOpen;render()}if(a==='consult'){analysisOpen=false;chatOpen=true;render()}if(a==='analysis'){analysisOpen=!analysisOpen;render()}if(a==='toast'){toast('Demo暂未开放，正式入口以平台业务系统为准')}if(a==='ask'){ask(el.dataset.q)}if(a==='send'){let input=document.querySelector('#chat-input');if(input?.value.trim())ask(input.value.trim())}if(a==='report'){toast('AI解析报告已生成，可在浏览器打印或保存为 PDF');window.print()}});document.querySelectorAll('[data-tab]').forEach(el=>el.onclick=()=>{activeTab=el.dataset.tab;render()});document.querySelectorAll('[data-layer]').forEach(el=>el.onclick=()=>{activeLayer=el.dataset.layer;render()})}
 function ask(q){const extra=document.querySelector('#chat-extra');if(!extra)return;extra.innerHTML=`<div class="msg user">${esc(q)}</div><div class="typing">AI正在分析条件 <i></i><i></i><i></i></div>`;setTimeout(()=>{extra.innerHTML+=`<div class="msg ai">${page==='home'?'已为您提取：<b>海宁市</b> · <b>商业 / 工业用房</b> · 年租金 <b>20万元以内</b>。为您找到 3 个匹配标的：':''}${page==='home'?listings.map(listingCard).join(''):answer(q)}</div>`;document.querySelector('.messages').scrollTop=99999;bind()},650)}
 function answer(q){let t=q.includes('适合')?'基于面积、用途和区位条件，AI参考建议仓储周转、供应链配套及轻型经营业态。建议进一步核实消防、用电和经营范围。':q.includes('人口')?'周边资源为演示数据：1公里圈层常住人口约2.6万，周边企业约186家，产业以制造业配套和仓储物流为主。':'当前字段显示起始价为70,080元/年，三年基础租金约21.02万元。保证金、递增方式等尚未提供，请以公告和合同为准。';return `${t}<div class="source">依据：挂牌信息 · 周边资源演示数据 · 参考建议</div>`}
 function toast(s){let d=document.createElement('div');d.className='toast';d.textContent=s;document.body.append(d);setTimeout(()=>d.remove(),2600)}
-window.onpopstate=()=>{const p=new URLSearchParams(location.search).get('page');page=p==='detail'?'detail':p==='cockpit'?'cockpit':'home';render()};render();
+window.onpopstate=()=>{const p=new URLSearchParams(location.search).get('page');page=p==='detail'?'detail':p==='cockpit'?'cockpit':p==='admin'?'admin':'home';if(page==='admin')syncAdminRoute();render()};render();

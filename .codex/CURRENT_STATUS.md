@@ -1,10 +1,26 @@
 # 江南e要素交易平台 AI Demo 当前状态
 
-更新时间：2026-09-17
+更新时间：2026-10-12
 
 ## 项目定位
 
 本项目是“江南e要素交易平台 AI 赋能 Demo”，用于现场演示首页智能咨询、产权标的详情和 AI 资产解析能力。项目不连接真实交易接口，不提交报名、保证金或竞价数据。
+
+AI Demo 已通过业主认可，驾驶舱已开始 UI 设计。当前已进入正式产品设计阶段，正在以 Demo 为原型依据形成可供产品、UI、前后端、数据、算法、安全和测试共同使用的 PRD 文档。
+
+## 正式产品 PRD
+
+`docs/prd/` 已建立第一版文档集，包含：
+
+- 产品总纲；
+- 数据驾驶舱 PRD；
+- AI 智能咨询 PRD；
+- AI 资产解析 PRD；
+- AI 运营管理后台 PRD；
+- 数据、接口、权限与非功能需求；
+- 研发分期与验收清单。
+
+后续正式系统设计应以 PRD 为需求基线，以现有 Demo 为视觉和交互参考，不得将 Demo 模拟数据、固定回复或前端硬编码规则直接用于生产。
 
 ## 已完成调整
 
@@ -33,6 +49,9 @@
 - 区域交易热度排行副标题已调整为“全市综合指数”。
 - 交易总览平均溢价率副文案统一为“同比 +2.1pp、环比 +0.8pp”；交易效能近 12 月 AI 触达摘要修正为 22,250 人次，与趋势图月度序列合计一致。
 - `.codex` 已补齐项目上下文、设计思想、开发交接说明和后续任务提示模板，后续修改应先阅读 `.codex/README.md`。
+- AI 运营管理后台 PRD 已细化为页面级研发规格，补充角色权限、对象关系、SLA、异常降级和 UAT；后台隐藏原型已完成 32 个页面，可通过 `?page=admin&module=workbench` 访问。
+- AI 运营管理后台已按 8 个业务模块拆分到 `src/admin/pages/`，页面共用的指标卡、筛选器、表格、图表小组件、侧栏、顶栏、抽屉和弹窗分别维护在 `src/admin/components.js`、`shell.js`、`overlays.js`。`src/admin.js` 负责路由状态及交互绑定，页面视觉和演示数据保持原样。
+- 后台 32 个 `?page=admin&module=xxx` 地址已在本地构建预览中逐一验证标题与菜单；同时验证了刷新、前进后退、详情抽屉、新建弹窗、字段确认及驾驶舱跳转返回。
 
 ## 技术结构
 
@@ -43,10 +62,16 @@
 - 样式：`src/style.css`
 - 驾驶舱子页样式：`src/cockpit.css`
 - 驾驶舱满屏布局修正：`src/cockpit-layout.css`
+- 运营后台路由与交互控制：`src/admin.js`
+- 运营后台业务页面：`src/admin/pages/*.js`
+- 运营后台共享组件与外壳：`src/admin/components.js`、`src/admin/shell.js`、`src/admin/overlays.js`
+- 运营后台集中演示数据：`src/admin-data.js`
+- 运营后台独立样式：`src/admin.css`
 - GitHub Pages 工作流：`.github/workflows/deploy-pages.yml`
 - GitHub Pages 静态资源路径配置：`vite.config.js`
 - Sites 托管配置：`.openai/hosting.json`
 - 内部驾驶舱直达地址：`/?page=cockpit`
+- 内部运营后台直达地址：`/?page=admin&module=workbench`
 - Codex 项目上下文入口：`.codex/README.md`
 - 设计思想：`.codex/DEMO_DESIGN.md`
 - 后续开发交接：`.codex/HANDOFF.md`

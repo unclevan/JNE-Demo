@@ -14,6 +14,12 @@
 - `src/style.css`：门户、详情、AI助手和基础驾驶舱样式。
 - `src/cockpit.css`：驾驶舱子页组件样式。
 - `src/cockpit-layout.css`：驾驶舱满屏布局、指标卡、问号说明和核心分析样式。
+- `src/admin.js`：AI 运营管理后台路由状态和交互绑定；后台页面由 `module` 参数选择。
+- `src/admin/pages/`：按工作台、资产解析、智能撮合、咨询运营、知识规则、风险辅助、报告和系统管理拆分的页面文件，合计覆盖 32 个后台路由。
+- `src/admin/components.js`：页面标题、指标卡、筛选器、表格、微型趋势图等共享组件。
+- `src/admin/shell.js`：侧栏、顶栏和页面图标；`src/admin/overlays.js`：通用详情抽屉及弹窗。
+- `src/admin-data.js`：运营后台菜单、指标、表格和专题页面的集中模拟数据。
+- `src/admin.css`：运营后台独立的桌面端高密度管理界面样式。
 - `vite.config.js`：GitHub Pages 相对资源路径配置。
 - `.github/workflows/deploy-pages.yml`：GitHub Pages 自动发布流程。
 - `.openai/hosting.json`：现有 Sites 项目标识；不得创建重复站点。
@@ -35,6 +41,7 @@
 
 - 执行 `npm run build`，修复构建错误。
 - 启动本地预览并确认 `/?page=cockpit` 能正常打开。
+- 确认 `/?page=admin&module=workbench` 能正常打开，并抽查列表、抽屉、弹窗、字段复核和驾驶舱跳转。
 - 按需求检查首页、详情页、页面跳转、AI咨询、AI资产解析和驾驶舱页签。
 - 若修改驾驶舱，检查 1920×1080 下是否铺满、是否出现大面积空白或文字挤压。
 - 若修改区域热力，需同时检查百度地图正常加载、暗色低干扰底图、热力云团与悬浮数值，以及断网或 AK 校验失败时的 ECharts 降级显示。
