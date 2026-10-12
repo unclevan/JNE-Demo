@@ -95,7 +95,7 @@ npm run build
 - 源码仓库：`https://github.com/unclevan/JNE-Demo.git`
 - 远端主分支：`main`
 - 已配置 GitHub Actions 自动构建 GitHub Pages。
-- GitHub Pages 需要在仓库 `Settings → Pages` 中将发布源设置为 `GitHub Actions`，设置完成后访问：`https://unclevan.github.io/JNE-Demo/`
+- GitHub Pages 已由 `main` 分支的 GitHub Actions 工作流发布，可访问：`https://unclevan.github.io/JNE-Demo/`。后台 32 个 `module` 直达地址已在线上逐一验证，刷新及浏览器前进后退正常。
 - 之前的 `chatgpt.site` 公开托管地址会被部分网络环境拦截，不作为客户访问入口。
 
 ## 数据与演示边界
