@@ -15,7 +15,7 @@
 - `src/cockpit.css`：驾驶舱子页组件样式。
 - `src/cockpit-layout.css`：驾驶舱满屏布局、指标卡、问号说明和核心分析样式。
 - `src/admin.js`：后台 Vue 应用挂载、卸载和浏览器历史同步。
-- `src/admin/AdminApp.vue`：后台侧栏、业务分组折叠、多标签、右上角驾驶舱入口及原型交互。
+- `src/admin/AdminApp.vue`：后台侧栏、单组自动展开、多标签、右上角驾驶舱直达及原型交互。
 - `src/admin/registry.js`：32 个 `module` 路由与页面元数据注册。
 - `src/admin/pages/`：按工作台、资产解析、智能撮合、咨询运营、知识规则、风险辅助、报告和系统管理拆分的页面文件，合计覆盖 32 个后台路由。
 - `src/admin/components.js`：页面标题、指标卡、筛选器、表格、微型趋势图等共享组件。

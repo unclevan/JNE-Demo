@@ -9,7 +9,8 @@ const props=defineProps({navigate:Function,toast:Function});
 const tabsStorageKey='jne-admin-tabs-v1';
 const moduleKey=ref(moduleFromUrl());
 const compactSidebar=ref(false);
-const collapsedGroups=ref([]);
+const groupForModule=key=>adminNavigation.find(group=>group.items.some(([item])=>item===key))?.label||null;
+const openGroup=ref(groupForModule(moduleKey.value));
 const activeDrawer=ref(null);
 const activeModal=ref(null);
 
@@ -32,6 +33,7 @@ function addTab(key){
 }
 function navigateModule(key,{replace=false}={}){
   if(!isAdminModule(key)) return;
+  openGroup.value=groupForModule(key);
   if(key===moduleKey.value&&!replace) return;
   moduleKey.value=key;
   activeDrawer.value=null;
@@ -44,6 +46,7 @@ function navigateModule(key,{replace=false}={}){
 }
 function syncRoute(){
   moduleKey.value=moduleFromUrl();
+  openGroup.value=groupForModule(moduleKey.value);
   activeDrawer.value=null;
   activeModal.value=null;
   addTab(moduleKey.value);
@@ -58,10 +61,9 @@ function closeTab(key){
   if(moduleKey.value===key) navigateModule(tabs.value[Math.max(0,index-1)]||'workbench');
 }
 function toggleGroup(label){
-  collapsedGroups.value=collapsedGroups.value.includes(label)
-    ?collapsedGroups.value.filter(item=>item!==label)
-    :[...collapsedGroups.value,label];
+  openGroup.value=openGroup.value===label?null:label;
 }
+function openCockpit(){props.navigate?.('cockpit');}
 function notify(message){props.toast?.(message);}
 function onAction(event){
   const target=event.target;
@@ -102,11 +104,11 @@ function onAction(event){
       <nav class="admin-nav" aria-label="后台业务菜单">
         <section v-for="group in adminNavigation" :key="group.label">
           <h3>
-            <button type="button" class="admin-group-toggle" :aria-expanded="!collapsedGroups.includes(group.label)" :aria-label="`${group.label}菜单${collapsedGroups.includes(group.label)?'展开':'收起'}`" @click.stop="toggleGroup(group.label)">
-              <i>{{group.icon}}</i><span>{{group.label}}</span><em>{{collapsedGroups.includes(group.label)?'⌄':'⌃'}}</em>
+            <button type="button" class="admin-group-toggle" :aria-expanded="openGroup===group.label" :aria-label="`${group.label}菜单${openGroup===group.label?'收起':'展开'}`" @click.stop="toggleGroup(group.label)">
+              <i>{{group.icon}}</i><span>{{group.label}}</span><em>{{openGroup===group.label?'⌃':'⌄'}}</em>
             </button>
           </h3>
-          <div v-show="!collapsedGroups.includes(group.label)" class="admin-nav-items">
+          <div v-show="openGroup===group.label" class="admin-nav-items">
             <button v-for="[key,label] in group.items" :key="key" type="button" :data-admin-page="key" :class="{active:moduleKey===key}" :title="label">
               <i>{{iconMap[key]||'·'}}</i><span>{{label}}</span><em v-if="key==='field-review'">38</em><em v-if="key==='risk-tasks'" class="danger">12</em>
             </button>
@@ -121,7 +123,7 @@ function onAction(event){
         <div class="admin-crumb"><button type="button" data-admin-action="collapse" :aria-label="compactSidebar?'展开侧栏':'收起侧栏'">☰</button><span>{{meta.section}}</span><i>›</i><b>{{meta.title}}</b></div>
         <div class="admin-global-search"><i>⌕</i><input placeholder="搜索项目、标的、主体、任务或会话"/><kbd>⌘ K</kbd></div>
         <div class="admin-top-actions">
-          <button type="button" class="admin-cockpit-link" title="数据驾驶舱" @click.stop="navigateModule('cockpit-entry')">▦ <span>数据驾驶舱</span></button>
+          <button type="button" class="admin-cockpit-link" title="数据驾驶舱" @click.stop="openCockpit">▦ <span>数据驾驶舱</span></button>
           <button type="button" title="帮助中心">?</button><button type="button" title="待办通知">♢<em>6</em></button>
           <button type="button" class="admin-user"><span>张</span><p><b>张敏</b><small>业务管理员</small></p><i>⌄</i></button>
         </div>
