@@ -22,7 +22,6 @@ function savedTabs(){
 
 const tabs=ref([...new Set(['workbench',...savedTabs(),moduleKey.value])]);
 const meta=computed(()=>metaFor(moduleKey.value));
-const contentHtml=computed(()=>pageRenderers[moduleKey.value](meta.value));
 const drawerHtml=computed(()=>drawer(activeDrawer.value,meta.value,moduleKey.value));
 const modalHtml=computed(()=>modal(activeModal.value,meta.value));
 
@@ -75,8 +74,9 @@ function onAction(event){
   if(action==='collapse') compactSidebar.value=!compactSidebar.value;
   if(action==='refresh'||action==='query') notify('页面数据已刷新（本地模拟数据）');
   if(action==='reset'){
-    document.querySelectorAll('.admin-filter input').forEach(input=>input.value='');
-    document.querySelectorAll('.admin-filter select').forEach(select=>select.selectedIndex=0);
+    const currentPage=document.querySelector(`.admin-tab-page[data-module="${moduleKey.value}"]`);
+    currentPage?.querySelectorAll('.admin-filter input').forEach(input=>input.value='');
+    currentPage?.querySelectorAll('.admin-filter select').forEach(select=>select.selectedIndex=0);
     notify('筛选条件已重置');
   }
   if(action==='primary') activeModal.value={title:meta.value.primary||'提交业务操作'};
@@ -133,7 +133,10 @@ function onAction(event){
           <button v-if="key!=='workbench'" type="button" class="admin-tab-close" :aria-label="`关闭${metaFor(key).title}标签`" @click.stop="closeTab(key)">×</button>
         </div>
       </div>
-      <div class="admin-content"><div v-html="contentHtml"></div><footer class="admin-page-foot">江南 e AI 能力中心后台原型 · 页面数据均为本地模拟数据 · AI 结论需人工复核</footer></div>
+      <div class="admin-content">
+        <div v-for="key in tabs" :key="key" v-show="moduleKey===key" class="admin-tab-page" :data-module="key" v-html="pageRenderers[key](metaFor(key))"></div>
+        <footer class="admin-page-foot">江南 e AI 能力中心后台原型 · 页面数据均为本地模拟数据 · AI 结论需人工复核</footer>
+      </div>
     </section>
     <div v-html="drawerHtml"></div><div v-html="modalHtml"></div>
   </main>
