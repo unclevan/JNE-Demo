@@ -8,16 +8,18 @@
 
 ## 技术结构
 
-- Vite + 原生 JavaScript + CSS，数值型图表使用 ECharts 按需注册；交易总览区域热力使用百度地图 JavaScript API 4.0 与 `BMapLib.HeatmapOverlay`。
+- Vite + 原生 JavaScript + CSS；后台外壳采用 Vue 3 单文件组件。数值型图表使用 ECharts 按需注册；交易总览区域热力使用百度地图 JavaScript API 4.0 与 `BMapLib.HeatmapOverlay`。
 - `src/main.js`：页面模板、路由状态和交互逻辑。
 - `src/data.js`：标的和驾驶舱本地演示数据。
 - `src/style.css`：门户、详情、AI助手和基础驾驶舱样式。
 - `src/cockpit.css`：驾驶舱子页组件样式。
 - `src/cockpit-layout.css`：驾驶舱满屏布局、指标卡、问号说明和核心分析样式。
-- `src/admin.js`：AI 运营管理后台路由状态和交互绑定；后台页面由 `module` 参数选择。
+- `src/admin.js`：后台 Vue 应用挂载、卸载和浏览器历史同步。
+- `src/admin/AdminApp.vue`：后台侧栏、业务分组折叠、多标签、右上角驾驶舱入口及原型交互。
+- `src/admin/registry.js`：32 个 `module` 路由与页面元数据注册。
 - `src/admin/pages/`：按工作台、资产解析、智能撮合、咨询运营、知识规则、风险辅助、报告和系统管理拆分的页面文件，合计覆盖 32 个后台路由。
 - `src/admin/components.js`：页面标题、指标卡、筛选器、表格、微型趋势图等共享组件。
-- `src/admin/shell.js`：侧栏、顶栏和页面图标；`src/admin/overlays.js`：通用详情抽屉及弹窗。
+- `src/admin/icons.js`：后台菜单图标；`src/admin/overlays.js`：通用详情抽屉及弹窗。
 - `src/admin-data.js`：运营后台菜单、指标、表格和专题页面的集中模拟数据。
 - `src/admin.css`：运营后台独立的桌面端高密度管理界面样式。
 - `vite.config.js`：GitHub Pages 相对资源路径配置。
@@ -26,7 +28,7 @@
 
 ## 修改原则
 
-- 沿用现有轻量结构，除非用户明确要求，不引入新的前端框架或图表库。
+- 门户、详情和驾驶舱沿用现有轻量结构；后台 Vue 外壳与原有业务页面模板并存，不引入整套外部后台模板或图表库。
 - 演示数据集中维护，避免在大量事件处理代码中重复散落。
 - 不接线上业务接口，不提交真实交易数据。
 - 不展示真实个人敏感信息。
@@ -34,7 +36,7 @@
 - 新增数值型可视化时沿用 `src/main.js` 中的 ECharts 初始化机制，并为每个系列补充可读的 tooltip 和单位。
 - 百度热力图依赖百度 JSAPI 与官方热力插件 CDN；保留 `overviewRegion` ECharts 降级图，不要删除地图加载失败后的兜底逻辑。正式域名变更时同步维护百度地图 AK 的 Referer 白名单。
 - 新增推测性结论时同步补充“模拟分析”或“仅供参考”。
-- 驾驶舱继续保持隐藏入口，只允许 URL 直达。
+- 驾驶舱不在公开门户出现；内部后台右上角提供入口，`?page=cockpit` 和 `?page=admin&module=cockpit-entry` 均可直达。
 - 门户 AI 和详情页 AI 使用同一助手形象，但回复上下文不同。
 
 ## 每次交付前验证

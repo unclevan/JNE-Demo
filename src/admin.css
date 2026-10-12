@@ -21,3 +21,26 @@
 @media(max-width:1300px){.admin-kpis{grid-template-columns:repeat(2,1fr)}.admin-workbench-grid{grid-template-columns:1fr 1fr}.admin-ai-summary{grid-column:span 1}.admin-trend-card{grid-column:span 1}.admin-review-layout{grid-template-columns:200px 1fr}.review-fields{grid-column:1/-1}.ai-config-grid,.datasource-grid{grid-template-columns:repeat(2,1fr)}.admin-analytics-grid{grid-template-columns:1fr 1fr}.admin-analytics-grid .span2{grid-column:1/-1}.admin-cockpit-entry{grid-template-columns:1fr}}
 @media(max-width:900px){.admin-sidebar{width:68px}.admin-main,.admin-shell.sidebar-compact .admin-main{margin-left:68px;width:calc(100% - 68px)}.admin-sidebar .admin-logo{padding:0 13px}.admin-sidebar .admin-logo>div,.admin-nav h3 span,.admin-nav button span,.admin-nav button em,.admin-env,.admin-sidebar-foot button span{display:none}.admin-nav h3{justify-content:center;margin:0}.admin-nav button{justify-content:center;padding:0}.admin-global-search{display:none}.admin-content{padding:16px}.admin-filter-fields{grid-template-columns:repeat(2,1fr)}.admin-workbench-grid,.admin-conversion-layout,.admin-review-layout{grid-template-columns:1fr}.admin-todo{grid-row:auto}.admin-ai-summary ul{grid-template-columns:1fr}.ai-config-grid,.datasource-grid{grid-template-columns:1fr}.admin-review-layout .review-fields{grid-column:auto}.admin-cockpit-entry{padding:16px}.cockpit-preview{min-height:360px}.preview-panels{height:230px}}
 @media(max-width:620px){.admin-kpis{grid-template-columns:1fr}.admin-page-head{display:block}.admin-page-actions{margin-top:8px}.admin-filter{display:block}.admin-filter-fields{grid-template-columns:1fr}.admin-filter-actions{margin-top:12px;justify-content:flex-end}.admin-topbar{padding:0 12px}.admin-crumb span,.admin-crumb i{display:none}.admin-top-actions>button:not(.admin-user),.admin-user p,.admin-user>i{display:none}.admin-user{margin-left:auto}.admin-content{padding:12px}.admin-analytics-grid{grid-template-columns:1fr}.admin-cockpit-entry{display:block}.cockpit-entry-copy{margin-top:22px}.admin-modal{width:92vw}.admin-modal>div{grid-template-columns:1fr}.admin-modal label.wide,.admin-modal>div>aside{grid-column:auto}}
+
+/* Vue 后台外壳：业务分组、已打开页面标签和右上角驾驶舱入口 */
+.admin-nav h3 .admin-group-toggle{width:100%;height:28px;padding:0 2px;background:transparent;color:#6f93b0;gap:8px;font-size:11px;font-weight:500}
+.admin-nav h3 .admin-group-toggle:hover{background:rgba(255,255,255,.05);color:#b9d9f1}
+.admin-nav h3 .admin-group-toggle>i{width:17px;color:inherit}
+.admin-nav h3 .admin-group-toggle>span{flex:1}
+.admin-nav h3 .admin-group-toggle>em{font-style:normal;font-size:12px;background:none;color:inherit;min-width:auto;height:auto;padding:0}
+.admin-nav-items{display:block}
+.admin-nav-items[style*="display: none"]{display:none!important}
+.admin-tabs{position:sticky;top:64px;z-index:24;height:42px;display:flex;align-items:stretch;gap:4px;padding:5px 20px 0;overflow-x:auto;scrollbar-width:thin;background:#fff;border-bottom:1px solid var(--admin-line)}
+.admin-tab{display:flex;align-items:center;flex:none;max-width:180px;height:36px;border:1px solid #e5eaf0;border-bottom:0;border-radius:6px 6px 0 0;background:#f6f8fb;color:#758396}
+.admin-tab.active{background:var(--admin-bg);border-color:#d9e4f2;color:#2675d7;box-shadow:inset 0 2px #2b86ec}
+.admin-tab>button{border:0;background:transparent;color:inherit;height:100%;white-space:nowrap}
+.admin-tab>button:first-child{padding:0 12px;overflow:hidden;text-overflow:ellipsis;font-size:11px}
+.admin-tab-close{width:24px;padding:0 6px 0 0;font-size:16px;opacity:.65}
+.admin-tab-close:hover{opacity:1;color:#d44e58}
+.admin-shell .admin-top-actions>.admin-cockpit-link{width:auto;height:34px;padding:0 12px;border:1px solid #d8e9f8;border-radius:6px;background:#edf6ff;color:#226fc4;white-space:nowrap;font-size:11px;font-weight:600}
+.admin-shell .admin-top-actions>.admin-cockpit-link:hover{background:#e0f0ff}
+.admin-content{min-height:calc(100vh - 106px)}
+.admin-sidebar.compact .admin-nav h3 .admin-group-toggle{justify-content:center}
+.admin-sidebar.compact .admin-nav h3 .admin-group-toggle>span,.admin-sidebar.compact .admin-nav h3 .admin-group-toggle>em{display:none}
+@media(max-width:900px){.admin-nav h3 .admin-group-toggle>span,.admin-nav h3 .admin-group-toggle>em{display:none}.admin-nav h3 .admin-group-toggle{justify-content:center}}
+@media(max-width:620px){.admin-shell .admin-top-actions>.admin-cockpit-link{display:inline-flex;align-items:center;padding:0 8px}.admin-cockpit-link span{display:none}.admin-tabs{padding-left:8px;padding-right:8px}}

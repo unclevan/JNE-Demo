@@ -9,7 +9,6 @@ export const adminNavigation=[
   {label:'知识与规则中心',icon:'▤',items:[['knowledge-docs','知识文档'],['knowledge-entries','知识条目'],['rules','业务规则'],['faq','常见问答'],['releases','发布版本']]},
   {label:'风险辅助中心',icon:'△',items:[['risk-clues','风险线索'],['risk-events','风险事件'],['risk-tasks','处置任务'],['rule-performance','规则效果']]},
   {label:'报告中心',icon:'▥',items:[['asset-reports','资产解析报告'],['operation-reports','运营分析报告'],['exports','导出任务']]},
-  {label:'数据驾驶舱',icon:'▦',items:[['cockpit-entry','驾驶舱入口']]},
   {label:'系统管理',icon:'⚙',items:[['org-users','组织与用户'],['roles','角色与权限'],['dictionaries','业务字典'],['ai-config','AI 配置'],['datasources','数据源与接口'],['audit','审计日志']]}
 ];
 

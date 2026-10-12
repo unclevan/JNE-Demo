@@ -1,5 +1,5 @@
 import {esc,renderValue} from './components.js';
-import {iconMap} from './shell.js';
+import {iconMap} from './icons.js';
 
 export function drawer(adminDrawer,meta,activeAdminPage){
   if(!adminDrawer) return '';

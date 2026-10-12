@@ -7,7 +7,7 @@ import { BarChart, EffectScatterChart, FunnelChart, GaugeChart, HeatmapChart, Li
 import { GridComponent, LegendComponent, TooltipComponent, VisualMapComponent } from 'echarts/components';
 import { CanvasRenderer } from 'echarts/renderers';
 import { asset, listings, quickHome, quickDetail, cockpitData } from './data.js';
-import { renderAdmin, bindAdmin, syncAdminRoute } from './admin.js';
+import { mountAdmin, syncAdminRoute, unmountAdmin } from './admin.js';
 
 echarts.use([BarChart,EffectScatterChart,FunnelChart,GaugeChart,HeatmapChart,LineChart,PieChart,RadarChart,ScatterChart,TreemapChart,GridComponent,LegendComponent,TooltipComponent,VisualMapComponent,CanvasRenderer]);
 
@@ -329,10 +329,10 @@ function attachDashControls(){document.querySelectorAll('[data-dash-tab]').forEa
 function render(){
   chartInstances.forEach(instance=>instance.dispose());chartInstances=[];
   if(page==='admin'){
-    app.innerHTML=renderAdmin();
-    bindAdmin({rerender:render,navigate:target=>{page=target;history.pushState({},'',`${location.pathname}?page=${target}`);render()},toast});
+    mountAdmin({navigate:target=>{page=target;history.pushState({},'',`${location.pathname}?page=${target}`);render()},toast});
     return;
   }
+  unmountAdmin();
   app.innerHTML=page==='home'?home():page==='cockpit'?cockpit():detail();bind();attachDashControls();initCharts();initBaiduHeatmap();
 }
 function bind(){document.querySelectorAll('[data-action]').forEach(el=>el.onclick=()=>{let a=el.dataset.action;if(a==='home'){page='home';history.pushState({},'',location.pathname);render()}if(a==='cockpit'){page='cockpit';history.pushState({},'',location.pathname+'?page=cockpit');render()}if(a==='asset'){page='detail';history.pushState({},'',location.pathname+'?page=detail');render()}if(a==='chat'){chatOpen=!chatOpen;render()}if(a==='consult'){analysisOpen=false;chatOpen=true;render()}if(a==='analysis'){analysisOpen=!analysisOpen;render()}if(a==='toast'){toast('Demo暂未开放，正式入口以平台业务系统为准')}if(a==='ask'){ask(el.dataset.q)}if(a==='send'){let input=document.querySelector('#chat-input');if(input?.value.trim())ask(input.value.trim())}if(a==='report'){toast('AI解析报告已生成，可在浏览器打印或保存为 PDF');window.print()}});document.querySelectorAll('[data-tab]').forEach(el=>el.onclick=()=>{activeTab=el.dataset.tab;render()});document.querySelectorAll('[data-layer]').forEach(el=>el.onclick=()=>{activeLayer=el.dataset.layer;render()})}

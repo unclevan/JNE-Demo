@@ -50,21 +50,25 @@ AI Demo 已通过业主认可，驾驶舱已开始 UI 设计。当前已进入�
 - 交易总览平均溢价率副文案统一为“同比 +2.1pp、环比 +0.8pp”；交易效能近 12 月 AI 触达摘要修正为 22,250 人次，与趋势图月度序列合计一致。
 - `.codex` 已补齐项目上下文、设计思想、开发交接说明和后续任务提示模板，后续修改应先阅读 `.codex/README.md`。
 - AI 运营管理后台 PRD 已细化为页面级研发规格，补充角色权限、对象关系、SLA、异常降级和 UAT；后台隐藏原型已完成 32 个页面，可通过 `?page=admin&module=workbench` 访问。
-- AI 运营管理后台已按 8 个业务模块拆分到 `src/admin/pages/`，页面共用的指标卡、筛选器、表格、图表小组件、侧栏、顶栏、抽屉和弹窗分别维护在 `src/admin/components.js`、`shell.js`、`overlays.js`。`src/admin.js` 负责路由状态及交互绑定，页面视觉和演示数据保持原样。
+- AI 运营管理后台已按 8 个业务模块拆分到 `src/admin/pages/`；页面共用的指标卡、筛选器、表格和图表小组件维护在 `src/admin/components.js`，通用抽屉与弹窗维护在 `src/admin/overlays.js`。页面视觉和演示数据保持原样。
 - 后台 32 个 `?page=admin&module=xxx` 地址已在本地构建预览中逐一验证标题与菜单；同时验证了刷新、前进后退、详情抽屉、新建弹窗、字段确认及驾驶舱跳转返回。
+- 后台外壳已改用 Vue 3 单文件组件：支持按访问顺序打开多标签、关闭标签、刷新后在当前浏览器会话恢复标签、左侧业务分组折叠/展开及整条侧栏收起/展开。原有业务页面模板与演示数据继续复用。
+- 驾驶舱入口已从后台左侧菜单移至右上角；公开门户仍不展示内部驾驶舱入口。后台原有 `module=cockpit-entry` 直达地址继续有效。
 
 ## 技术结构
 
-- 前端：Vite + 原生 JavaScript + CSS + ECharts；交易总览热力底图使用百度地图 JavaScript API 4.0，无真实大模型依赖。
+- 前端：Vite + 原生 JavaScript + CSS + ECharts；后台外壳使用 Vue 3。交易总览热力底图使用百度地图 JavaScript API 4.0，无真实大模型依赖。
 - 入口：`index.html`
 - 页面逻辑：`src/main.js`
 - 演示数据：`src/data.js`
 - 样式：`src/style.css`
 - 驾驶舱子页样式：`src/cockpit.css`
 - 驾驶舱满屏布局修正：`src/cockpit-layout.css`
-- 运营后台路由与交互控制：`src/admin.js`
+- 运营后台 Vue 挂载入口：`src/admin.js`
+- 运营后台外壳、多标签与菜单状态：`src/admin/AdminApp.vue`
+- 运营后台页面注册与路由元数据：`src/admin/registry.js`
 - 运营后台业务页面：`src/admin/pages/*.js`
-- 运营后台共享组件与外壳：`src/admin/components.js`、`src/admin/shell.js`、`src/admin/overlays.js`
+- 运营后台共享模板与弹层：`src/admin/components.js`、`src/admin/overlays.js`；图标：`src/admin/icons.js`
 - 运营后台集中演示数据：`src/admin-data.js`
 - 运营后台独立样式：`src/admin.css`
 - GitHub Pages 工作流：`.github/workflows/deploy-pages.yml`
