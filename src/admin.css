@@ -23,7 +23,7 @@
 @media(max-width:620px){.admin-kpis{grid-template-columns:1fr}.admin-page-head{display:block}.admin-page-actions{margin-top:8px}.admin-filter{display:block}.admin-filter-fields{grid-template-columns:1fr}.admin-filter-actions{margin-top:12px;justify-content:flex-end}.admin-topbar{padding:0 12px}.admin-crumb span,.admin-crumb i{display:none}.admin-top-actions>button:not(.admin-user),.admin-user p,.admin-user>i{display:none}.admin-user{margin-left:auto}.admin-content{padding:12px}.admin-analytics-grid{grid-template-columns:1fr}.admin-cockpit-entry{display:block}.cockpit-entry-copy{margin-top:22px}.admin-modal{width:92vw}.admin-modal>div{grid-template-columns:1fr}.admin-modal label.wide,.admin-modal>div>aside{grid-column:auto}}
 
 /* Vue 后台外壳：业务分组、已打开页面标签和右上角驾驶舱入口 */
-.admin-nav h3 .admin-group-toggle{width:100%;height:28px;padding:0 2px;background:transparent;color:#6f93b0;gap:8px;font-size:11px;font-weight:500}
+.admin-nav h3 .admin-group-toggle{width:100%;height:28px;padding:0 2px;background:transparent;color:#6f93b0;gap:8px;font-size:14px;font-weight:600}
 .admin-nav h3 .admin-group-toggle:hover{background:rgba(255,255,255,.05);color:#b9d9f1}
 .admin-nav h3 .admin-group-toggle>i{width:17px;color:inherit}
 .admin-nav h3 .admin-group-toggle>span{flex:1}
